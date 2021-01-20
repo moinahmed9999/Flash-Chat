@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Not using these anymore -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+
+    <!-- App Theme Colors -->
+    <color name="colorPrimary">#2c6bee</color>
+    <color name="colorPrimaryDark">#0041bb</color>
+    <color name="colorPrimaryLight">#7398ff</color>
+
+    <color name="colorSecondary">#ffb018</color>
+    <color name="colorSecondaryDark">#c78100</color>
+    <color name="colorSecondaryLight">#ffe254</color>
+
+    <color name="colorError">#f44336</color>
+
+<!--    <color name="colorComplementary">#FFAF4CAC</color>-->
+<!--    <color name="colorComplementaryDark">#FFA0309E</color>-->
+<!--    <color name="colorComplementaryLight">#FFBE6BBA</color>-->
+
+    <!-- Text Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+    <color name="colorBackgroundLight">#fafafa</color>
+    <color name="colorBackgroundDark">#121212</color>
+
+    <color name="colorTextRegular">#b9b9b9</color>
+    <color name="colorTextBold">#e9e9e9</color>
+    <color name="colorGrey">#d4d4d4</color>
+
+    <color name="colorBlueBubble">#2c6bee</color>
+    <color name="colorGreyBubble">#e9e9e9</color>
+<!--    <color name="colorBlueBubbleText">#2c6bee</color>-->
+<!--    <color name="colorGreyBubbleText">#e9e9e9</color>-->
+
+</resources>
