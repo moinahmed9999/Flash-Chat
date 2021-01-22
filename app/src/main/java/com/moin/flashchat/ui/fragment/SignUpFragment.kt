@@ -2,25 +2,30 @@ package com.moin.flashchat.ui.fragment
 
 import android.os.Bundle
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentSignUpBinding
+import com.moin.flashchat.ui.viewmodel.SignUpViewModel
 
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var viewModel: SignUpViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -28,9 +33,17 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initUi()
+
         handleErrors()
 
-        setOnClickListeners();
+        observeViewModel()
+
+        setOnClickListeners()
+    }
+
+    private fun initUi() {
+        viewModel = ViewModelProvider(this).get(SignUpViewModel::class.java)
     }
 
     private fun handleErrors() {
@@ -73,9 +86,19 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    private fun observeViewModel() {
+        viewModel.spinner.observe(viewLifecycleOwner) { visible ->
+            if (visible) showProgressBar() else hideProgressBar()
+        }
+
+        viewModel.snackBar.observe(viewLifecycleOwner) { message ->
+            showSnackbar(message!!)
+            viewModel.onSnackbarShown()
+        }
+    }
+
     private fun setOnClickListeners() {
         binding.apply {
-
             btnLogIn.setOnClickListener {
                 it.findNavController().navigate(R.id.action_signUpFragment_to_logInFragment)
             }
@@ -84,10 +107,13 @@ class SignUpFragment : Fragment() {
                 if (!isInputValid()) {
                     showSnackbar("Invalid inputs")
                 } else {
-                    it.findNavController().navigate(R.id.action_signUpFragment_to_phoneNoFragment)
+                    viewModel.signUpUserWithEmail(
+                        binding.tilFullName.editText?.text.toString(),
+                        binding.tilEmail.editText?.text.toString(),
+                        binding.tilPassword.editText?.text.toString()
+                    )
                 }
             }
-
         }
     }
 
@@ -101,6 +127,19 @@ class SignUpFragment : Fragment() {
 
     private fun showSnackbar(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun showProgressBar() {
+        binding.llDisabledScreen.visibility = View.VISIBLE
+        binding.circularProgressIndicator.show()
+        activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    private fun hideProgressBar() {
+        binding.circularProgressIndicator.hide()
+        binding.llDisabledScreen.visibility = View.GONE
+        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun onDestroyView() {
