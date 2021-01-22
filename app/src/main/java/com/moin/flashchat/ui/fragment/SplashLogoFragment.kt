@@ -1,10 +1,11 @@
 package com.moin.flashchat.ui.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentSplashLogoBinding
@@ -21,7 +22,7 @@ class SplashLogoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentSplashLogoBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -30,16 +31,22 @@ class SplashLogoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.fragmentSplashMotionLayout.setTransitionDuration(MOTION_TRANSITION_DURATION)
 
-        GlobalScope.launch(Dispatchers.Main) {
-            delay(MOTION_TRANSITION_DURATION.toLong())
-            Navigation.findNavController(binding.root).navigate(R.id.action_splashLogoFragment_to_signInActivity)
+//        GlobalScope.launch(Dispatchers.Main) {
+//            delay(MOTION_TRANSITION_DURATION.toLong())
+//            Navigation.findNavController(binding.root)
+//                .navigate(R.id.action_splashLogoFragment_to_signInActivity)
+//            activity?.finish()
+//        }
+
+        Handler().postDelayed(Runnable {
+            Navigation.findNavController(view).navigate(R.id.action_splashLogoFragment_to_signInActivity)
             activity?.finish()
-        }
+        }, MOTION_TRANSITION_DURATION.toLong())
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     companion object {

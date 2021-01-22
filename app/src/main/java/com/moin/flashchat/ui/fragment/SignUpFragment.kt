@@ -1,5 +1,6 @@
 package com.moin.flashchat.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -25,7 +26,7 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -92,8 +93,10 @@ class SignUpFragment : Fragment() {
         }
 
         viewModel.snackBar.observe(viewLifecycleOwner) { message ->
-            showSnackbar(message!!)
-            viewModel.onSnackbarShown()
+            message?.let {
+                showSnackbar(message)
+                viewModel.onSnackbarShown()
+            }
         }
     }
 
@@ -113,6 +116,10 @@ class SignUpFragment : Fragment() {
                         binding.tilPassword.editText?.text.toString()
                     )
                 }
+            }
+
+            btnSignUpWithGoogle.setOnClickListener {
+                viewModel.signUpUserWithGoogle(this@SignUpFragment)
             }
         }
     }
@@ -140,6 +147,11 @@ class SignUpFragment : Fragment() {
         binding.circularProgressIndicator.hide()
         binding.llDisabledScreen.visibility = View.GONE
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroyView() {
