@@ -4,7 +4,10 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -15,7 +18,7 @@ import com.moin.flashchat.data.repository.SignUpRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class SignUpViewModel : ViewModel() {
+class SignUpViewModel: ViewModel() {
     private val repository: SignUpRepository = SignUpRepository()
 
     private lateinit var googleSingInClient: GoogleSignInClient
@@ -24,16 +27,20 @@ class SignUpViewModel : ViewModel() {
     val spinner: LiveData<Boolean>
         get() = _spinner
 
-    private val _snackBar: MutableLiveData<String?> = repository.snackBar
+    private val _snackBar = repository.snackBar
     val snackBar: LiveData<String?>
         get() = _snackBar
 
+    val signUp = repository.signUp
+
+    // Email and Password
     fun signUpUserWithEmail(name: String, email: String, password: String) {
         launchDataLoad {
             repository.signUpUserWithEmail(name, email, password)
         }
     }
 
+    // Google
     fun signUpUserWithGoogle(fragment: Fragment) {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(fragment.getString(R.string.default_web_client_id))
@@ -46,19 +53,20 @@ class SignUpViewModel : ViewModel() {
         fragment.startActivityForResult(intent, RC_SIGN_IN)
     }
 
-    private fun handleGoogleSignInResult (task: Task<GoogleSignInAccount>) {
+    private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
         launchDataLoad {
             repository.signUpUserWithGoogle(task)
         }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
+        if (requestCode == RC_SIGN_IN && resultCode == RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleGoogleSignInResult(task)
         }
     }
 
+    // Utility functions
     private fun launchDataLoad(block: suspend () -> Unit): Job {
         return viewModelScope.launch {
             try {

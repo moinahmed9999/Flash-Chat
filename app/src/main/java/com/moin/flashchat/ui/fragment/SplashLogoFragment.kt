@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentSplashLogoBinding
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class SplashLogoFragment : Fragment() {
 
         Handler().postDelayed(Runnable {
             Navigation.findNavController(view).navigate(R.id.action_splashLogoFragment_to_signInActivity)
+//            findNavController().navigate(R.id.action_splashLogoFragment_to_signInActivity)
             activity?.finish()
         }, MOTION_TRANSITION_DURATION.toLong())
     }

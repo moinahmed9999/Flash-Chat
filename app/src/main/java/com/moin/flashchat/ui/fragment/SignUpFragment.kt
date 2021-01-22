@@ -10,7 +10,7 @@ import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentSignUpBinding
@@ -88,14 +88,20 @@ class SignUpFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.spinner.observe(viewLifecycleOwner) { visible ->
-            if (visible) showProgressBar() else hideProgressBar()
-        }
+        viewModel.apply {
+            spinner.observe(viewLifecycleOwner) { visible ->
+                if (visible) showProgressBar() else hideProgressBar()
+            }
 
-        viewModel.snackBar.observe(viewLifecycleOwner) { message ->
-            message?.let {
-                showSnackbar(message)
-                viewModel.onSnackbarShown()
+            snackBar.observe(viewLifecycleOwner) { message ->
+                message?.let {
+                    showSnackbar(message)
+                    viewModel.onSnackbarShown()
+                }
+            }
+
+            signUp.observe(viewLifecycleOwner) { successful ->
+                if (successful) findNavController().navigate(R.id.action_signUpFragment_to_phoneNoFragment)
             }
         }
     }
@@ -103,7 +109,7 @@ class SignUpFragment : Fragment() {
     private fun setOnClickListeners() {
         binding.apply {
             btnLogIn.setOnClickListener {
-                it.findNavController().navigate(R.id.action_signUpFragment_to_logInFragment)
+                findNavController().navigate(R.id.action_signUpFragment_to_logInFragment)
             }
 
             btnSignUp.setOnClickListener {

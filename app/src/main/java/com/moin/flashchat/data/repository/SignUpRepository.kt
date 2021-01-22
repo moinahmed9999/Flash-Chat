@@ -1,26 +1,30 @@
 package com.moin.flashchat.data.repository
 
+import android.app.Activity
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.moin.flashchat.extension.await
 import com.moin.flashchat.utils.Result
+import java.util.concurrent.TimeUnit
 
-class SignUpRepository() {
+class SignUpRepository {
     private var auth = Firebase.auth
 //    private val db = Firebase.firestore
 //    private val collection = db.collection(USER_COLLECTION_NAME)
 
     val snackBar = MutableLiveData<String?>()
+
+    private val _signUp = MutableLiveData(false)
+    val signUp: LiveData<Boolean>
+        get() = _signUp
 
     suspend fun signUpUserWithEmail(name: String, email: String, password: String) {
         try {
@@ -55,6 +59,7 @@ class SignUpRepository() {
                 is Result.Success -> {
                     Log.i(TAG, "updateUserProfile: Sign Up Successful ${auth.currentUser?.displayName}")
                     snackBar.value = "Sign Up Successful ${user.displayName}"
+                    _signUp.value = true
                 }
                 is Result.Error -> {
                     Log.e(TAG, "updateUserProfile1: ${result.exception.message}")
@@ -80,6 +85,7 @@ class SignUpRepository() {
                     is Result.Success -> {
                         Log.d(TAG, "signUpUserWithGoogle: Sign Up Successful ${result.data?.user?.displayName}")
                         snackBar.value = "Sign Up Successful ${result.data?.user?.displayName}"
+                        _signUp.value = true
                     }
                     is Result.Error -> {
                         Log.e(TAG, "signUpUserWithGoogle: ${result.exception.message}")
