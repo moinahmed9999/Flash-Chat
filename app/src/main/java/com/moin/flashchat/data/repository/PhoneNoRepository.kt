@@ -27,6 +27,10 @@ class PhoneNoRepository {
     val signUp: LiveData<Boolean>
         get() = _signUp
 
+    private val _codeSent = MutableLiveData(false)
+    val codeSent: LiveData<Boolean>
+        get() = _codeSent
+
     private var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -51,6 +55,7 @@ class PhoneNoRepository {
             override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
                 Log.d(TAG, "onCodeSent: $verificationId")
                 snackBar.value = "Code sent"
+                _codeSent.value = true
 
                 storedVerificationId = verificationId
                 resendToken = token
@@ -107,6 +112,10 @@ class PhoneNoRepository {
             Log.e(TAG, "linkPhoneWithAccount: ${e.message}")
             snackBar.value = "Verification Failed: ${e.message}"
         }
+    }
+
+    fun onTimerStarted() {
+        _codeSent.value = false
     }
 
     companion object {

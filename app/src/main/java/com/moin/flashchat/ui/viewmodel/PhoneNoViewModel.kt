@@ -23,6 +23,8 @@ class PhoneNoViewModel: ViewModel() {
 
     val signUp = repository.signUp
 
+    val codeSent = repository.codeSent
+
     // Phone
     fun sendVerificationCode(number: String, activity: Activity) {
         repository.sendVerificationCode(number, activity)
@@ -55,6 +57,10 @@ class PhoneNoViewModel: ViewModel() {
 
     fun onSnackbarShown() {
         _snackBar.value = null
+    }
+
+    fun onTimerStarted() {
+        repository.onTimerStarted()
     }
 
     companion object {

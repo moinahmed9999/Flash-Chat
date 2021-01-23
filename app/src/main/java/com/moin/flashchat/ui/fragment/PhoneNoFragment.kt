@@ -1,6 +1,7 @@
 package com.moin.flashchat.ui.fragment
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ class PhoneNoFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: PhoneNoViewModel
+    private lateinit var timer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +47,11 @@ class PhoneNoFragment : Fragment() {
 
     private fun initUi() {
         viewModel = ViewModelProvider(this).get(PhoneNoViewModel::class.java)
+
+        binding.apply {
+            btnVerifyOtp.isEnabled = false
+            btnResendOtp.isEnabled = false
+        }
     }
 
     private fun handleErrors() {
@@ -74,12 +81,37 @@ class PhoneNoFragment : Fragment() {
             snackBar.observe(viewLifecycleOwner) { message ->
                 message?.let {
                     showSnackbar(message)
-                    viewModel.onSnackbarShown()
+                    onSnackbarShown()
                 }
             }
 
             signUp.observe(viewLifecycleOwner) { successful ->
-//                if (successful) findNavController().navigate(R.id.action_signUpFragment_to_phoneNoFragment)
+                if (successful) {
+                    timer.cancel()
+
+                    binding.apply {
+                        tilTimerSeconds.editText?.setText(R.string.time_initial_value)
+
+                        btnVerifyOtp.isEnabled = false
+                        btnChangePhoneNo.visibility = View.GONE
+                    }
+
+//                    findNavController().navigate(R.id.action_signUpFragment_to_phoneNoFragment)
+                }
+            }
+
+            codeSent.observe(viewLifecycleOwner) { codeSent ->
+                if (codeSent) {
+                    binding.apply {
+                        btnVerifyOtp.isEnabled = true
+                        btnSendOtp.isEnabled = false
+                        tilPhoneNo.editText?.isEnabled = false
+                        btnChangePhoneNo.visibility = View.VISIBLE
+                    }
+
+                    showTimer()
+                    onTimerStarted()
+                }
             }
         }
     }
@@ -98,7 +130,7 @@ class PhoneNoFragment : Fragment() {
             }
 
             btnVerifyOtp.setOnClickListener {
-                viewModel.linkPhoneWithAccount(tilOtpCode.editText?.text.toString())
+                if (isOtpValid()) viewModel.linkPhoneWithAccount(tilOtpCode.editText?.text.toString())
             }
 
             btnResendOtp.setOnClickListener {
@@ -107,6 +139,18 @@ class PhoneNoFragment : Fragment() {
                     requireActivity()
                 )
             }
+
+            btnChangePhoneNo.setOnClickListener {
+                tilPhoneNo.editText?.isEnabled = true
+                btnSendOtp.isEnabled = true
+
+                btnVerifyOtp.isEnabled = false
+                btnResendOtp.isEnabled = false
+                timer?.cancel()
+                tilTimerSeconds.editText?.setText(R.string.time_initial_value)
+
+                btnChangePhoneNo.visibility = View.GONE
+            }
         }
     }
 
@@ -114,6 +158,13 @@ class PhoneNoFragment : Fragment() {
         binding.apply {
             return (tilPhoneNo.editText?.text.toString().isNotEmpty() &&
                     tilPhoneNo.editText?.text.toString().length == 10)
+        }
+    }
+
+    private fun isOtpValid(): Boolean {
+        binding.apply {
+            return (tilOtpCode.editText?.text.toString().isNotEmpty() &&
+                    tilOtpCode.editText?.text.toString().length == 6)
         }
     }
 
@@ -133,6 +184,29 @@ class PhoneNoFragment : Fragment() {
         binding.circularProgressIndicator.hide()
         binding.llDisabledScreen.visibility = View.GONE
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    private fun showTimer() {
+        binding.apply {
+            if (btnResendOtp.isEnabled) btnResendOtp.isEnabled = false
+
+            timer = object : CountDownTimer(60_000, 1_000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    val timeLeft = (millisUntilFinished/1000).toString()
+
+                    if (timeLeft.length == 1) {
+                        tilTimerSeconds.editText?.setText("0$timeLeft")
+                    } else {
+                        tilTimerSeconds.editText?.setText(timeLeft)
+                    }
+                }
+
+                override fun onFinish() {
+                    btnResendOtp.isEnabled = true
+                }
+            }
+            timer.start()
+        }
     }
 
     override fun onDestroyView() {

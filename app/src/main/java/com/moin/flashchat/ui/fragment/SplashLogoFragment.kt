@@ -40,7 +40,7 @@ class SplashLogoFragment : Fragment() {
 //        }
 
         Handler().postDelayed(Runnable {
-            Navigation.findNavController(view).navigate(R.id.action_splashLogoFragment_to_signInActivity)
+            Navigation.findNavController(binding.root).navigate(R.id.action_splashLogoFragment_to_signInActivity)
 //            findNavController().navigate(R.id.action_splashLogoFragment_to_signInActivity)
             activity?.finish()
         }, MOTION_TRANSITION_DURATION.toLong())

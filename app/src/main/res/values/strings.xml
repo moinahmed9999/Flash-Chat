@@ -18,4 +18,10 @@
     <string name="send_otp">Send OTP</string>
     <string name="enter_otp">Enter OTP</string>
     <string name="otp">OTP</string>
+    <string name="change_phone_number">Change Phone Number?</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="resend">Resend</string>
+    <string name="india_country_code">+91</string>
+    <string name="time_initial_value">00</string>
+    <string name="colon">:</string>
 </resources>
