@@ -132,9 +132,9 @@ class SignUpFragment : Fragment() {
 
     private fun isInputValid(): Boolean {
         binding.apply {
-            return !(tilFullName.editText?.text.toString().isEmpty() ||
-                !Patterns.EMAIL_ADDRESS.matcher(tilEmail.editText?.text.toString()).matches() ||
-                tilPassword.editText?.text.toString().length < 8)
+            return (tilFullName.editText?.text.toString().isNotEmpty() &&
+                Patterns.EMAIL_ADDRESS.matcher(tilEmail.editText?.text.toString()).matches() &&
+                tilPassword.editText?.text.toString().length >= 8)
         }
     }
 

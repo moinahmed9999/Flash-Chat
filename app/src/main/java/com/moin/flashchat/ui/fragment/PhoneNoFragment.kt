@@ -26,8 +26,8 @@ class PhoneNoFragment : Fragment() {
     private lateinit var timer: CountDownTimer
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPhoneNoBinding.inflate(inflater, container, false)
         return binding.root
@@ -58,14 +58,18 @@ class PhoneNoFragment : Fragment() {
         binding.apply {
             tilPhoneNo.apply {
                 editText?.doOnTextChanged { text, _, _, _ ->
-                    if (text.toString().isEmpty()) {
-                        isErrorEnabled = true
-                        error = "Phone Number should not be empty"
-                    } else if (text.toString().length<10){
-                        isErrorEnabled = true
-                        error = "Enter a 10 digit number"
-                    } else {
-                        isErrorEnabled = false
+                    when {
+                        text.toString().isEmpty() -> {
+                            isErrorEnabled = true
+                            error = "Phone Number should not be empty"
+                        }
+                        text.toString().length < 10 -> {
+                            isErrorEnabled = true
+                            error = "Enter a 10 digit number"
+                        }
+                        else -> {
+                            isErrorEnabled = false
+                        }
                     }
                 }
             }
@@ -105,6 +109,7 @@ class PhoneNoFragment : Fragment() {
                     binding.apply {
                         btnVerifyOtp.isEnabled = true
                         btnSendOtp.isEnabled = false
+                        btnResendOtp.isEnabled = false
                         tilPhoneNo.editText?.isEnabled = false
                         btnChangePhoneNo.visibility = View.VISIBLE
                     }
@@ -123,8 +128,8 @@ class PhoneNoFragment : Fragment() {
                     showSnackbar("Invalid inputs")
                 } else {
                     viewModel.sendVerificationCode(
-                        "+91" + tilPhoneNo.editText?.text.toString(),
-                        requireActivity()
+                            getString(R.string.india_country_code) + tilPhoneNo.editText?.text.toString(),
+                            requireActivity()
                     )
                 }
             }
@@ -135,8 +140,8 @@ class PhoneNoFragment : Fragment() {
 
             btnResendOtp.setOnClickListener {
                 viewModel.resendVerificationCode(
-                    "+91" + tilPhoneNo.editText?.text.toString(),
-                    requireActivity()
+                        getString(R.string.india_country_code) + tilPhoneNo.editText?.text.toString(),
+                        requireActivity()
                 )
             }
 
@@ -176,8 +181,8 @@ class PhoneNoFragment : Fragment() {
         binding.llDisabledScreen.visibility = View.VISIBLE
         binding.circularProgressIndicator.show()
         activity?.window?.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     private fun hideProgressBar() {
@@ -188,11 +193,9 @@ class PhoneNoFragment : Fragment() {
 
     private fun showTimer() {
         binding.apply {
-            if (btnResendOtp.isEnabled) btnResendOtp.isEnabled = false
-
             timer = object : CountDownTimer(60_000, 1_000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    val timeLeft = (millisUntilFinished/1000).toString()
+                    val timeLeft = (millisUntilFinished / 1000).toString()
 
                     if (timeLeft.length == 1) {
                         tilTimerSeconds.editText?.setText("0$timeLeft")
