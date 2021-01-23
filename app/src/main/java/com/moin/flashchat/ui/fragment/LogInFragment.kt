@@ -1,5 +1,6 @@
 package com.moin.flashchat.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -114,7 +115,7 @@ class LogInFragment : Fragment() {
             }
 
             btnLogInWithGoogle.setOnClickListener {
-
+                viewModel.logInUserWithGoogle(this@LogInFragment)
             }
         }
     }
@@ -142,6 +143,11 @@ class LogInFragment : Fragment() {
         binding.circularProgressIndicator.hide()
         binding.llDisabledScreen.visibility = View.GONE
         activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroyView() {
