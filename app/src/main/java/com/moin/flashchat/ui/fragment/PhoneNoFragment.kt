@@ -100,7 +100,8 @@ class PhoneNoFragment : Fragment() {
                         btnChangePhoneNo.visibility = View.GONE
                     }
 
-//                    findNavController().navigate(R.id.action_signUpFragment_to_phoneNoFragment)
+                    findNavController().navigate(R.id.action_phoneNoFragment_to_homeActivity)
+                    requireActivity().finish()
                 }
             }
 

@@ -15,6 +15,9 @@
             app:destination="@id/signUpFragment"
             app:popUpTo="@id/logInFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_logInFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -34,5 +37,14 @@
         android:id="@+id/phoneNoFragment"
         android:name="com.moin.flashchat.ui.fragment.PhoneNoFragment"
         android:label="fragment_phone_no"
-        tools:layout="@layout/fragment_phone_no" />
+        tools:layout="@layout/fragment_phone_no" >
+        <action
+            android:id="@+id/action_phoneNoFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.moin.flashchat.ui.activity.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 </navigation>

@@ -13,10 +13,18 @@
         <action
             android:id="@+id/action_splashLogoFragment_to_signInActivity"
             app:destination="@id/signInActivity" />
+        <action
+            android:id="@+id/action_splashLogoFragment_to_homeActivity2"
+            app:destination="@id/homeActivity2" />
     </fragment>
     <activity
         android:id="@+id/signInActivity"
         android:name="com.moin.flashchat.ui.activity.SignInActivity"
         android:label="activity_sign_in"
         tools:layout="@layout/activity_sign_in" />
+    <activity
+        android:id="@+id/homeActivity2"
+        android:name="com.moin.flashchat.ui.activity.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 </navigation>

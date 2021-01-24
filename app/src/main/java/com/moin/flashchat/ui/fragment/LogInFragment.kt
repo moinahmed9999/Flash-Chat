@@ -11,6 +11,7 @@ import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentLogInBinding
@@ -91,7 +92,8 @@ class LogInFragment : Fragment() {
 
             signIn.observe(viewLifecycleOwner) { successful ->
                 if (successful) {
-
+                    findNavController().navigate(R.id.action_logInFragment_to_homeActivity)
+                    requireActivity().finish()
                 }
             }
         }

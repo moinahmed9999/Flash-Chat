@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentSplashLogoBinding
 import kotlinx.coroutines.Dispatchers
@@ -39,11 +41,21 @@ class SplashLogoFragment : Fragment() {
 //            activity?.finish()
 //        }
 
-        Handler().postDelayed(Runnable {
+        Handler().postDelayed({
+            navigate()
+        }, MOTION_TRANSITION_DURATION.toLong())
+    }
+
+    private fun navigate() {
+        if (Firebase.auth.currentUser == null) {
             Navigation.findNavController(binding.root).navigate(R.id.action_splashLogoFragment_to_signInActivity)
 //            findNavController().navigate(R.id.action_splashLogoFragment_to_signInActivity)
-            activity?.finish()
-        }, MOTION_TRANSITION_DURATION.toLong())
+            requireActivity().finish()
+        } else {
+            Navigation.findNavController(binding.root).navigate(R.id.action_splashLogoFragment_to_homeActivity2)
+//            findNavController().navigate(R.id.action_splashLogoFragment_to_homeActivity2)
+            requireActivity().finish()
+        }
     }
 
     override fun onDestroyView() {
