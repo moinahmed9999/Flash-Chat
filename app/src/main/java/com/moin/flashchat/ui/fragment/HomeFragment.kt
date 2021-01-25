@@ -2,8 +2,6 @@ package com.moin.flashchat.ui.fragment
 
 import android.Manifest
 import android.content.ContentResolver
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -14,8 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -26,8 +22,9 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.moin.flashchat.R
 import com.moin.flashchat.databinding.FragmentHomeBinding
-import com.moin.flashchat.ui.viewmodel.LogInViewModel
+import com.moin.flashchat.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.*
 
 class HomeFragment : Fragment() {
@@ -67,6 +64,8 @@ class HomeFragment : Fragment() {
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
         binding.toolbarFragmentHome.setupWithNavController(navController, appBarConfiguration)
+
+        binding.toolbarFragmentHome.title = getString(R.string.app_name)
     }
 
     private fun loadContacts() {

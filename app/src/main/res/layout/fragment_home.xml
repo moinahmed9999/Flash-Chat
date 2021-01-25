@@ -16,7 +16,8 @@
             android:id="@+id/toolbar_fragment_home"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="@string/app_name" />
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline5"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

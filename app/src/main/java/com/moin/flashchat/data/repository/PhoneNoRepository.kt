@@ -10,6 +10,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.moin.flashchat.data.model.BasicUser
 import com.moin.flashchat.data.model.User
 import com.moin.flashchat.extension.await
 import com.moin.flashchat.utils.Result
@@ -123,12 +124,8 @@ class PhoneNoRepository {
                 val phoneNumberRef = collection.document(phoneNumber!!)
 
                 val result = db.runTransaction { transaction ->
-                    transaction.set(phoneNumberRef, mapOf(
-                        "uid" to uid,
-                        "displayName" to displayName,
-                        "email" to email,
-                        "phoneNumber" to phoneNumber
-                    ))
+                    transaction.set(phoneNumberRef, BasicUser(
+                        uid, displayName!!, email!!, phoneNumber!!))
 
                     transaction.set(uidRef, User(
                         uid, displayName!!, email!!, phoneNumber!!, emptyList(), emptyList()))
