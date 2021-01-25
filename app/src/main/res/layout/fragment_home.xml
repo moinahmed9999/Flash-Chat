@@ -39,6 +39,24 @@
         android:focusable="true"
         android:src="@drawable/ic_edit" />
 
+    <LinearLayout
+        android:id="@+id/ll_disabled_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B0000000"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/circular_progress_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="?colorSecondary"
+        app:trackCornerRadius="2dp" />
+
     <!--    <androidx.core.widget.NestedScrollView-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="match_parent"-->

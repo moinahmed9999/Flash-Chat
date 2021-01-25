@@ -95,4 +95,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    // Dexter
+    implementation 'com.karumi:dexter:6.2.2'
 }

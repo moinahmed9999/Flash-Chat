@@ -25,4 +25,8 @@
     <string name="time_initial_value">00</string>
     <string name="colon">:</string>
     <string name="new_chat">New Chat</string>
+    <string name="content_desc_chat_preview_image">Image of Chat like user image or group image</string>
+    <string name="chat_title">Chat Title</string>
+    <string name="last_message">Last message</string>
+    <string name="example_date">10/01/20</string>
 </resources>
