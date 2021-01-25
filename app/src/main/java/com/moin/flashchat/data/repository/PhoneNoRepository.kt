@@ -6,20 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.moin.flashchat.data.model.User
 import com.moin.flashchat.extension.await
 import com.moin.flashchat.utils.Result
 import java.util.concurrent.TimeUnit
 
 class PhoneNoRepository {
     private var auth = Firebase.auth
-//    private val db = Firebase.firestore
-//    private val collection = db.collection(USER_COLLECTION_NAME)
+    private val db = Firebase.firestore
+    private val collection = db.collection(USER_COLLECTION_NAME)
+    private lateinit var user: FirebaseUser
 
     val snackBar = MutableLiveData<String?>()
 
@@ -96,8 +96,9 @@ class PhoneNoRepository {
             when (val result = auth.currentUser!!.linkWithCredential(credential).await()) {
                 is Result.Success -> {
                     Log.d(TAG, "linkPhoneWithAccount: Sign Up Successful ${result.data?.user?.phoneNumber}")
+                    user = result.data.user!!
                     snackBar.value = "Sign Up Successful ${result.data?.user?.phoneNumber}"
-                    _signUp.value = true
+                    createUserInFirestore()
                 }
                 is Result.Error -> {
                     Log.e(TAG, "linkPhoneWithAccount: ${result.exception.message}")
@@ -114,12 +115,53 @@ class PhoneNoRepository {
         }
     }
 
+    private suspend fun createUserInFirestore() {
+        try {
+            user.apply {
+
+                val uidRef = collection.document(uid)
+                val phoneNumberRef = collection.document(phoneNumber!!)
+
+                val result = db.runTransaction { transaction ->
+                    transaction.set(phoneNumberRef, mapOf(
+                        "uid" to uid,
+                        "displayName" to displayName,
+                        "email" to email,
+                        "phoneNumber" to phoneNumber
+                    ))
+
+                    transaction.set(uidRef, User(
+                        uid, displayName!!, email!!, phoneNumber!!, emptyList(), emptyList()))
+                }.await()
+
+                when (result) {
+                    is Result.Success -> {
+                        Log.d(TAG, "createUserInFirestore: Added in firestore")
+                        snackBar.value = "Added in firestore"
+                        _signUp.value = true
+                    }
+                    is Result.Error -> {
+                        Log.e(TAG, "createUserInFirestore: ${result.exception.message}")
+                        snackBar.value = result.exception.message
+                    }
+                    is Result.Canceled -> {
+                        Log.e(TAG, "createUserInFirestore: ${result.exception?.message}")
+                        snackBar.value = "Result Canceled"
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "createUserInFirestore: ${e.message}")
+            snackBar.value = "Could not add user to firestore: ${e.message}"
+        }
+    }
+
     fun onTimerStarted() {
         _codeSent.value = false
     }
 
     companion object {
         private const val TAG = "PhoneNoRepository"
-//        private const val USER_COLLECTION_NAME = "users"
+        private const val USER_COLLECTION_NAME = "users"
     }
 }

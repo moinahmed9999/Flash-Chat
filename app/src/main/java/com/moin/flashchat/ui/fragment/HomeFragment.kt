@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
 
         initUi()
 
-        loadContacts()
+//        loadContacts()
     }
 
     private fun initUi() {
@@ -74,7 +74,7 @@ class HomeFragment : Fragment() {
             .withPermission(Manifest.permission.READ_CONTACTS)
             .withListener(object : PermissionListener {
                 override fun onPermissionGranted(p0: PermissionGrantedResponse?) {
-//                    getContacts()
+                    getContacts()
                 }
 
                 override fun onPermissionDenied(p0: PermissionDeniedResponse?) {
