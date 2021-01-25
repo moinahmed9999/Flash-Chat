@@ -9,5 +9,14 @@
         android:id="@+id/homeFragment"
         android:name="com.moin.flashchat.ui.fragment.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_newChatFragment"
+            app:destination="@id/newChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newChatFragment"
+        android:name="com.moin.flashchat.ui.fragment.NewChatFragment"
+        android:label="fragment_new_chat"
+        tools:layout="@layout/fragment_new_chat" />
 </navigation>

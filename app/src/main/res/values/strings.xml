@@ -29,4 +29,8 @@
     <string name="chat_title">Chat Title</string>
     <string name="last_message">Last message</string>
     <string name="example_date">10/01/20</string>
+    <string name="create_new_chat">Create new chat</string>
+    <string name="new_group">New group</string>
+    <string name="contact_name">Contact Name</string>
+    <string name="sample_phone_number">+919999999999</string>
 </resources>
