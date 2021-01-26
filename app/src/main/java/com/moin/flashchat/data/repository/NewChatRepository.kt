@@ -160,7 +160,7 @@ class NewChatRepository {
                 if (userResult is Result.Success && userResult.data.exists()) {
                     Log.e(TAG, "Chat already exists")
                     snackBar.postValue("Chat already exists")
-                    _chat.postValue(Chat(cid, userResult.data.toObject<BasicUser>()!!, contact, 1, null))
+                    _chat.postValue(Chat(cid, contact.displayName, 1, null))
                 }
             } else {
                 val transactionResult = db.runTransaction { transaction ->
@@ -186,10 +186,9 @@ class NewChatRepository {
 
                 if (transactionResult is Result.Success) {
                     currentUser.apply {
-                        val sender = BasicUser(uid, displayName!!, email!!, phoneNumber!!)
                         Log.e(TAG, "New Chat")
                         snackBar.postValue("New Chat")
-                        _chat.postValue(Chat(cid, sender, contact, 1, null))
+                        _chat.postValue(Chat(cid, contact.displayName, 1, null))
                     }
                 }
             }

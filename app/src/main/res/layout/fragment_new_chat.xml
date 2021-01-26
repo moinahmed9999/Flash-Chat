@@ -95,7 +95,8 @@
         android:clickable="true"
         android:contentDescription="@string/create_new_chat"
         android:focusable="true"
-        android:src="@drawable/ic_done" />
+        android:src="@drawable/ic_done"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/ll_disabled_screen"
