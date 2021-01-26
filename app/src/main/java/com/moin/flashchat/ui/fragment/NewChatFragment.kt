@@ -8,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionDeniedResponse
@@ -37,6 +39,8 @@ class NewChatFragment : Fragment() {
     private lateinit var viewModel: NewChatViewModel
     private lateinit var adapter: ContactsAdapter
 
+    private val gson = Gson()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +62,15 @@ class NewChatFragment : Fragment() {
     private fun initUi() {
         viewModel = ViewModelProvider(this).get(NewChatViewModel::class.java)
 
-        adapter = ContactsAdapter()
+        adapter = ContactsAdapter(object : ContactsAdapter.ContactsClickListener {
+            override fun onContactClick(position: Int) {
+                val user = viewModel.users.value?.get(position)
+                user?.apply {
+//                    showSnackbar(phoneNumber)
+                    viewModel.startChat(user)
+                }
+            }
+        })
         binding.rvContacts.adapter = adapter
 
         val navController = findNavController()
@@ -84,6 +96,15 @@ class NewChatFragment : Fragment() {
 
             users.observe(viewLifecycleOwner) { userList ->
                 adapter.submitList(userList)
+            }
+
+            chat.observe(viewLifecycleOwner) {
+                it?.let {
+                    findNavController().navigate(R.id.action_newChatFragment_to_chatFragment, bundleOf(
+                        "chat" to gson.toJson(chat.value)
+                    ))
+                    viewModel.chatStarted()
+                }
             }
         }
     }

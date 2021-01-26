@@ -18,5 +18,14 @@
         android:id="@+id/newChatFragment"
         android:name="com.moin.flashchat.ui.fragment.NewChatFragment"
         android:label="fragment_new_chat"
-        tools:layout="@layout/fragment_new_chat" />
+        tools:layout="@layout/fragment_new_chat" >
+        <action
+            android:id="@+id/action_newChatFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.moin.flashchat.ui.fragment.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

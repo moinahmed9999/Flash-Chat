@@ -6,7 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.moin.flashchat.data.model.BasicUser
 import com.moin.flashchat.data.repository.NewChatRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
@@ -23,25 +25,37 @@ class NewChatViewModel: ViewModel() {
 
     val users = repository.users
 
+    val chat = repository.chat
+
     fun getUsersInContact(activity: Activity) {
         launchDataLoad {
             repository.getUsersInContact(activity)
         }
     }
 
+    fun startChat(contact: BasicUser) {
+        launchDataLoad {
+            repository.startChat(contact)
+        }
+    }
+
     // Utility functions
     private fun launchDataLoad(block: suspend () -> Unit): Job {
-        return viewModelScope.launch {
+        return viewModelScope.launch(Dispatchers.IO) {
             try {
-                _spinner.value = true
+                _spinner.postValue(true)
                 block()
             } catch (error: Throwable) {
                 Log.e(TAG, "launchDataLoad: ${error.message}")
-                _snackBar.value = "Error: ${error.message}"
+                _snackBar.postValue("Error: ${error.message}")
             } finally {
-                _spinner.value = false
+                _spinner.postValue(false)
             }
         }
+    }
+
+    fun chatStarted() {
+        repository.chatStarted()
     }
 
     fun onSnackbarShown() {

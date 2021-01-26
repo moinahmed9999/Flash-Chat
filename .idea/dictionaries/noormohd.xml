@@ -2,6 +2,7 @@
   <dictionary name="noormohd">
     <words>
       <w>firestore</w>
+      <w>gson</w>
       <w>snackbar</w>
     </words>
   </dictionary>
