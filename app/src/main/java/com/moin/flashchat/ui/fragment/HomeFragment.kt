@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,8 +17,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import com.moin.flashchat.R
 import com.moin.flashchat.data.adapter.ChatPreviewAdapter
+import com.moin.flashchat.data.model.Chat
 import com.moin.flashchat.data.model.ChatPreview
 import com.moin.flashchat.data.repository.NewChatRepository
 import com.moin.flashchat.databinding.FragmentHomeBinding
@@ -41,6 +44,8 @@ class HomeFragment : Fragment() {
     private var auth = Firebase.auth
     private val db = Firebase.firestore
     private val usersCollection = db.collection(USER_COLLECTION_NAME)
+
+    private val gson = Gson()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +78,10 @@ class HomeFragment : Fragment() {
 
         adapter = ChatPreviewAdapter(options, object : ChatPreviewAdapter.ChatClickListener {
             override fun onChatClick(position: Int, chatPreview: ChatPreview) {
-                findNavController().navigate(R.id.action_homeFragment_to_chatFragment)
+                val chat = Chat(chatPreview.cid, chatPreview.chatTitle, 1)
+                findNavController().navigate(R.id.action_homeFragment_to_chatFragment, bundleOf(
+                        "chat" to gson.toJson(chat)
+                ))
             }
         })
 

@@ -1,10 +1,10 @@
 package com.moin.flashchat.data.model
 
-import com.google.firebase.Timestamp
+import java.util.Date
 
 data class ChatPreview(
     val cid: String = "",
     val chatTitle: String = "",
     val lastMessage: String = "",
-    val lastMessageTimestamp: Timestamp? = null
+    val lastMessageTimestamp: Date? = null
 )

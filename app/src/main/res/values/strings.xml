@@ -34,4 +34,7 @@
     <string name="contact_name">Contact Name</string>
     <string name="sample_phone_number">+919999999999</string>
     <string name="you">You</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="send_message">Send message</string>
+    <string name="send">Send</string>
 </resources>
