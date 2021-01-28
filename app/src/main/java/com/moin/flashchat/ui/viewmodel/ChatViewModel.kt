@@ -17,6 +17,12 @@ class ChatViewModel(private val cid: String) : ViewModel() {
         }
     }
 
+    fun sendGroupMessage(message: String) {
+        launchDataLoad {
+            repository.sendGroupMessage(message)
+        }
+    }
+
     // Utility functions
     private fun launchDataLoad(block: suspend () -> Unit): Job {
         return viewModelScope.launch(Dispatchers.IO) {

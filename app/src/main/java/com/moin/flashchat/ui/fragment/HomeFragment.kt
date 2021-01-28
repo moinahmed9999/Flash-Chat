@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
 
         adapter = ChatPreviewAdapter(options, object : ChatPreviewAdapter.ChatClickListener {
             override fun onChatClick(position: Int, chatPreview: ChatPreview) {
-                val chat = Chat(chatPreview.cid, chatPreview.chatTitle, 1)
+                val chat = Chat(chatPreview.cid, chatPreview.chatTitle, chatPreview.chatType)
                 findNavController().navigate(R.id.action_homeFragment_to_chatFragment, bundleOf(
                         "chat" to gson.toJson(chat)
                 ))
@@ -90,9 +90,22 @@ class HomeFragment : Fragment() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(navController.graph)
 
-        binding.toolbarFragmentHome.setupWithNavController(navController, appBarConfiguration)
+        binding.apply {
+            toolbarFragmentHome.setupWithNavController(navController, appBarConfiguration)
+            toolbarFragmentHome.title = getString(R.string.app_name)
 
-        binding.toolbarFragmentHome.title = getString(R.string.app_name)
+            toolbarFragmentHome.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.log_out_home -> {
+                        Firebase.auth.signOut()
+                        findNavController().navigate(R.id.action_homeFragment_to_signInActivity2)
+                        activity?.finish()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
     }
 
     private fun setOnClickListeners() {

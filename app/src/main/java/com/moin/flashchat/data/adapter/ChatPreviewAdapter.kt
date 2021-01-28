@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.moin.flashchat.R
 import com.moin.flashchat.data.model.ChatPreview
 import com.moin.flashchat.databinding.LayoutChatPreviewBinding
 
@@ -29,6 +30,12 @@ class ChatPreviewAdapter(
                 tvChatTitle.text = chatPreview.chatTitle
                 tvChatLastMessage.text = chatPreview.lastMessage
                 tvChatLastMsgTime.visibility = View.GONE
+
+                if (chatPreview.chatType == 1) {
+                    ivChatImage.setImageResource(R.drawable.ic_user)
+                } else if (chatPreview.chatType == 2) {
+                    ivChatImage.setImageResource(R.drawable.ic_group)
+                }
 
                 root.setOnClickListener {
                     val position = adapterPosition

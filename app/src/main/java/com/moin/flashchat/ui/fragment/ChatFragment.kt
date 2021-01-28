@@ -48,6 +48,8 @@ class ChatFragment : Fragment() {
     private val db = Firebase.firestore
     private val chatsCollection = db.collection(CHAT_COLLECTION_NAME)
 
+    private var type = -1
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +68,7 @@ class ChatFragment : Fragment() {
 
     private fun initUi() {
         val chat = gson.fromJson(arguments?.getString("chat"), Chat::class.java)
+        type = chat.chatType
 
         viewModel = ViewModelProvider(this, ViewModelFactory(chat.cid)).get(ChatViewModel::class.java)
 
@@ -99,7 +102,9 @@ class ChatFragment : Fragment() {
             btnSend.setOnClickListener {
                 val message = etMessage.text?.toString()
                 if (!message.isNullOrEmpty()) {
-                    viewModel.sendMessage(message)
+                    if (type == 1) viewModel.sendMessage(message)
+                    else if (type == 2) viewModel.sendGroupMessage(message)
+                    etMessage.setText("")
                 }
             }
         }

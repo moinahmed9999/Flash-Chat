@@ -38,4 +38,5 @@
     <string name="send_message">Send message</string>
     <string name="send">Send</string>
     <string name="group_name">Group Name</string>
+    <string name="log_out">Log out</string>
 </resources>

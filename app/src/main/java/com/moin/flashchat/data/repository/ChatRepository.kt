@@ -53,6 +53,43 @@ class ChatRepository(private val cid: String) {
         }
     }
 
+    suspend fun sendGroupMessage(message: String) {
+        try {
+            val result = db.runTransaction { transaction ->
+                val chatRef = chatsCollection.document(cid)
+                val chatDetails = transaction.get(chatRef)
+
+                val date = Date()
+
+                val userIds: List<String> = chatDetails.data?.get("users") as List<String>
+
+                if (userIds.isNotEmpty()) {
+                    Log.d(TAG, "sendGroupMessage: 1")
+                    for (id in userIds) {
+                        Log.d(TAG, "sendGroupMessage: 2")
+                        if(!id.isNullOrEmpty()) {
+                            Log.d(TAG, "sendGroupMessage: 3")
+                            val ref = usersCollection.document(id).collection(CHAT_COLLECTION_NAME).document(cid)
+                            transaction.update(ref, "lastMessage", message)
+                            transaction.update(ref, "lastMessageTimestamp", date)
+                        }
+                    }
+                }
+
+                val messageRef = chatRef.collection(MESSAGE_COLLECTION_NAME).document()
+
+                transaction.set(messageRef, Message(
+                        messageRef.id, currentUser.uid, currentUser.displayName!!, message, date))
+            }.await()
+
+            if (result is Result.Success) {
+                Log.d(TAG, "sendGroupMessage: Successful")
+            }
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception: ${e.message}")
+        }
+    }
+
     companion object {
         private const val TAG = "ChatRepository"
         private const val USER_COLLECTION_NAME = "users"

@@ -172,9 +172,9 @@ class NewChatRepository {
 
                     val groupRef = chatsCollection.document(cid)
 
-                    transaction.set(u1Ref, ChatPreview(cid, contact.displayName, "", null))
+                    transaction.set(u1Ref, ChatPreview(cid, contact.displayName, 1,"", null))
 
-                    transaction.set(u2Ref, ChatPreview(cid, currentUser.displayName!!, "", null))
+                    transaction.set(u2Ref, ChatPreview(cid, currentUser.displayName!!, 1,"", null))
 
                     transaction.set(groupRef, mapOf(
                         "cid" to cid,
@@ -206,7 +206,7 @@ class NewChatRepository {
 
             val cid = currentUserRef.id
 
-            val chatPreview = ChatPreview(cid, groupName, "", null)
+            val chatPreview = ChatPreview(cid, groupName, 2,"", null)
 
             val transactionResult = db.runTransaction { transaction ->
 

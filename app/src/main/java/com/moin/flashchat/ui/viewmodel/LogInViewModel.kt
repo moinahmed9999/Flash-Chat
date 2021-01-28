@@ -49,6 +49,8 @@ class LogInViewModel: ViewModel() {
 
         googleSingInClient = GoogleSignIn.getClient(fragment.requireActivity(), gso)
 
+        googleSingInClient.signOut()
+
         val intent = googleSingInClient.signInIntent
         fragment.startActivityForResult(intent, RC_SIGN_IN)
     }

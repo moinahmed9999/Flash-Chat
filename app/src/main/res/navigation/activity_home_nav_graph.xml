@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_signInActivity2"
+            app:destination="@id/signInActivity2" />
     </fragment>
     <fragment
         android:id="@+id/newChatFragment"
@@ -33,4 +36,9 @@
         android:name="com.moin.flashchat.ui.fragment.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <activity
+        android:id="@+id/signInActivity2"
+        android:name="com.moin.flashchat.ui.activity.SignInActivity"
+        android:label="activity_sign_in"
+        tools:layout="@layout/activity_sign_in" />
 </navigation>
