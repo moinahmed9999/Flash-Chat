@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -25,7 +27,9 @@ import com.moin.flashchat.R
 import com.moin.flashchat.data.adapter.ContactsAdapter
 import com.moin.flashchat.data.repository.NewChatRepository
 import com.moin.flashchat.databinding.FragmentNewChatBinding
+import com.moin.flashchat.databinding.LayoutContactBinding
 import com.moin.flashchat.ui.viewmodel.NewChatViewModel
+import com.moin.flashchat.utils.NewChatState
 
 class NewChatFragment : Fragment() {
 
@@ -40,6 +44,10 @@ class NewChatFragment : Fragment() {
     private lateinit var adapter: ContactsAdapter
 
     private val gson = Gson()
+    private var state = NewChatState.STATE_NEW_CHAT
+
+    private lateinit var uid: String
+    private var groupIds: MutableList<String> = mutableListOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,17 +65,27 @@ class NewChatFragment : Fragment() {
         observeViewModel()
 
         askPermission()
+
+        setOnCLickListeners()
     }
 
     private fun initUi() {
+        uid = Firebase.auth.currentUser?.uid!!
+        groupIds.add(uid)
+
         viewModel = ViewModelProvider(this).get(NewChatViewModel::class.java)
 
         adapter = ContactsAdapter(object : ContactsAdapter.ContactsClickListener {
-            override fun onContactClick(position: Int) {
+            override fun onContactClick(position: Int, layoutContactBinding: LayoutContactBinding) {
                 val user = viewModel.users.value?.get(position)
-                user?.apply {
-//                    showSnackbar(phoneNumber)
-                    viewModel.startChat(user)
+                user?.let {
+                    if (state == NewChatState.STATE_NEW_CHAT) {
+                        viewModel.startChat(it)
+                    } else {
+                        layoutContactBinding.ivContactSelected.visibility = View.VISIBLE
+                        groupIds.add(it.uid)
+                        binding.fabCreateNewChat.visibility = View.VISIBLE
+                    }
                 }
             }
         })
@@ -129,6 +147,37 @@ class NewChatFragment : Fragment() {
                 }
 
             }).check()
+    }
+
+    private fun setOnCLickListeners() {
+        binding.apply {
+            llNewGroup.setOnClickListener {
+                toggleState()
+            }
+            fabCreateNewChat.setOnClickListener {
+                val groupName = tilGroupName.editText?.text?.toString()
+                if (!groupName.isNullOrEmpty()) {
+                    viewModel.createNewGroup(groupName, groupIds.toList())
+                }
+            }
+        }
+    }
+
+    private fun toggleState() {
+        binding.apply {
+            if (state == NewChatState.STATE_NEW_CHAT) {
+                state = NewChatState.STATE_NEW_GROUP_CHAT
+                ivNewGroupSelected.visibility = View.VISIBLE
+                tilGroupName.visibility = View.VISIBLE
+            } else {
+                state = NewChatState.STATE_NEW_CHAT
+                ivNewGroupSelected.visibility = View.GONE
+                tilGroupName.visibility = View.GONE
+                fabCreateNewChat.visibility = View.GONE
+                groupIds.clear()
+                groupIds.add(uid)
+            }
+        }
     }
 
     private fun showSnackbar(message: String) {

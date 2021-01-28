@@ -28,7 +28,7 @@ class ContactsAdapter(private val clickListener: ContactsClickListener) :
                 root.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        clickListener.onContactClick(position)
+                        clickListener.onContactClick(position, binding)
                     }
                 }
             }
@@ -44,6 +44,6 @@ class ContactsAdapter(private val clickListener: ContactsClickListener) :
     }
 
     interface ContactsClickListener {
-        fun onContactClick(position: Int)
+        fun onContactClick(position: Int, layoutContactBinding: LayoutContactBinding)
     }
 }

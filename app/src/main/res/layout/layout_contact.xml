@@ -50,5 +50,16 @@
             app:layout_constraintStart_toEndOf="@+id/iv_contact_icon"
             app:layout_constraintTop_toBottomOf="@+id/tv_contact_name" />
 
+        <ImageView
+            android:id="@+id/iv_contact_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_done" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -194,7 +194,50 @@ class NewChatRepository {
             }
         } catch (e: Exception) {
             Log.e(TAG, "startChat: ${e.message}")
-            snackBar.postValue("Verification Failed: ${e.message}")
+            snackBar.postValue("Error: ${e.message}")
+        }
+    }
+
+    suspend fun createNewGroup(groupName: String, groupIds: List<String>) {
+        try {
+            val currentUid = currentUser.uid
+            val currentUserRef = usersCollection.document(currentUid).collection(
+                    CHAT_COLLECTION_NAME).document()
+
+            val cid = currentUserRef.id
+
+            val chatPreview = ChatPreview(cid, groupName, "", null)
+
+            val transactionResult = db.runTransaction { transaction ->
+
+                transaction.set(currentUserRef, chatPreview)
+
+                for (id in groupIds) {
+                    if (id == currentUid) continue
+                    val userRef = usersCollection.document(id).collection(
+                            CHAT_COLLECTION_NAME).document(cid)
+                    transaction.set(userRef, chatPreview)
+                }
+
+                val groupRef = chatsCollection.document(cid)
+                transaction.set(groupRef, mapOf(
+                        "cid" to cid,
+                        "type" to 2,
+                        "users" to groupIds
+                ))
+            }.await()
+
+            if (transactionResult is Result.Success) {
+                currentUser.apply {
+                    Log.e(TAG, "New Group Chat")
+                    snackBar.postValue("New Group Chat")
+                    _chat.postValue(Chat(cid, groupName, 2, groupName))
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "createNewGroup: ${e.message}")
+            snackBar.postValue("Error: ${e.message}")
         }
     }
 

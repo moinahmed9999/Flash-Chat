@@ -39,6 +39,12 @@ class NewChatViewModel: ViewModel() {
         }
     }
 
+    fun createNewGroup(groupName: String, groupIds: List<String>) {
+        launchDataLoad {
+            repository.createNewGroup(groupName, groupIds)
+        }
+    }
+
     // Utility functions
     private fun launchDataLoad(block: suspend () -> Unit): Job {
         return viewModelScope.launch(Dispatchers.IO) {
