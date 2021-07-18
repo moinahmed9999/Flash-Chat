@@ -27,13 +27,11 @@ class ChatViewModel(private val cid: String) : ViewModel() {
     private fun launchDataLoad(block: suspend () -> Unit): Job {
         return viewModelScope.launch(Dispatchers.IO) {
             try {
-//                _spinner.postValue(true)
                 block()
             } catch (error: Throwable) {
                 Log.e(TAG, "launchDataLoad: ${error.message}")
-//                _snackBar.postValue("Error: ${error.message}")
             } finally {
-//                _spinner.postValue(false)
+
             }
         }
     }

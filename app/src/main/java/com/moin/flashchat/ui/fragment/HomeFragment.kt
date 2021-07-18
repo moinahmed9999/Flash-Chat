@@ -116,27 +116,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showSnackbar(message: String) {
-        Log.d(TAG, "showSnackbar:")
-        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun showProgressBar() {
-        Log.d(TAG, "showProgressBar:")
-        binding.llDisabledScreen.visibility = View.VISIBLE
-        binding.circularProgressIndicator.show()
-        activity?.window?.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-    }
-
-    private fun hideProgressBar() {
-        Log.d(TAG, "hideProgressBar:")
-        binding.circularProgressIndicator.hide()
-        binding.llDisabledScreen.visibility = View.GONE
-        activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-    }
-
     override fun onStart() {
         super.onStart()
         adapter.startListening()
